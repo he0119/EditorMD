@@ -340,23 +340,29 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
 <script type="text/javascript">
 $(function() {
 <?php if($editormd->isActive == 1 && $conent->isMarkdown){ ?>
-    var markdowns = document.getElementsByClassName("md_content");
-    $(markdowns).each(function(){
-        var markdown = $(this).children("#append-test").text();
-        //$('#md_content_'+i).text('');
-        var editormdView;
-        editormdView = editormd.markdownToHTML($(this).attr("id"), {
-            markdown: markdown,//+ "\r\n" + $("#append-test").text(),
-            toolbarAutoFixed : false,
-            htmlDecode: true,
-            emoji: <?php echo $editormd->emoji?'true':'false'; ?>,
-            tex: <?php echo $editormd->isTex?'true':'false'; ?>,
-            toc: <?php echo $editormd->isToc?'true':'false'; ?>,
-            tocm: <?php echo $editormd->isToc?'true':'false'; ?>,
-            taskList: <?php echo $editormd->isTask?'true':'false'; ?>,
-            flowChart: <?php echo $editormd->isFlow?'true':'false'; ?>,
-            sequenceDiagram: <?php echo $editormd->isSeq?'true':'false'; ?>,
+    var parseMarkdown = function () {
+        var markdowns = document.getElementsByClassName("md_content");
+        $(markdowns).each(function () {
+            var markdown = $(this).children("#append-test").text();
+            //$('#md_content_'+i).text('');
+            var editormdView;
+            editormdView = editormd.markdownToHTML($(this).attr("id"), {
+                markdown: markdown,//+ "\r\n" + $("#append-test").text(),
+                toolbarAutoFixed: false,
+                htmlDecode: true,
+                emoji: <?php echo $editormd->emoji ? 'true' : 'false'; ?>,
+                tex: <?php echo $editormd->isTex ? 'true' : 'false'; ?>,
+                toc: <?php echo $editormd->isToc ? 'true' : 'false'; ?>,
+                tocm: <?php echo $editormd->isToc ? 'true' : 'false'; ?>,
+                taskList: <?php echo $editormd->isTask ? 'true' : 'false'; ?>,
+                flowChart: <?php echo $editormd->isFlow ? 'true' : 'false'; ?>,
+                sequenceDiagram: <?php echo $editormd->isSeq ? 'true' : 'false'; ?>,
+            });
         });
+    };
+    parseMarkdown();
+    $(document).on('pjax:complete', function () {
+        parseMarkdown()
     });
 <?php }if($editormd->emoji){ ?>
     emojify.setConfig({
