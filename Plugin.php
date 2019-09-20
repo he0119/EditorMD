@@ -4,9 +4,9 @@ if (!defined('__TYPECHO_ROOT_DIR__')) exit;
  * Markdown 编辑器 <a href="https://pandao.github.io/editor.md/" target="_blank">Editor.md</a> for Typecho
  * 
  * @package EditorMD
- * @author DT27
- * @version 1.4.0
- * @link https://dt27.org/php/editormd-for-typecho/
+ * @author uy_sun
+ * @version 1.4.1
+ * @link https://hehome.xyz
  */
 class EditorMD_Plugin implements Typecho_Plugin_Interface
 {
@@ -26,6 +26,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         Typecho_Plugin::factory('Widget_Abstract_Contents')->content = array('EditorMD_Plugin', 'content');
         Typecho_Plugin::factory('Widget_Abstract_Contents')->excerpt = array('EditorMD_Plugin', 'content');
         Typecho_Plugin::factory('Widget_Archive')->footer = array('EditorMD_Plugin','footerJS');
+        Typecho_Plugin::factory('Widget_Archive')->header = array('EditorMD_Plugin','headerCSS');
     }
     
     /**
@@ -325,6 +326,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
 </script>
 <?php }if($editormd->isActive == 1 && $conent->isMarkdown){ ?>
 <script src="<?php echo $pluginUrl; ?>/lib/marked.min.js"></script>
+<script src="<?php echo $pluginUrl; ?>/lib/highlight.pack.js"></script>
 <script src="<?php echo $pluginUrl; ?>/js/editormd.min.js"></script>
 <?php if($editormd->isSeq == 1||$editormd->isFlow == 1){ ?>
 <script src="<?php echo $pluginUrl; ?>/lib/raphael.min.js"></script>
@@ -397,6 +399,10 @@ if(isset(Typecho_Widget::widget('Widget_Options')->plugins['activated']['APlayer
 <?php
 }
     }
+    public static function headerCSS($header) {
+        echo '<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.15.10/styles/googlecode.min.css">';
+    }
+
     public static function content($text, $conent){
         self::$count++;
         $editormd = Typecho_Widget::widget('Widget_Options')->plugin('EditorMD');
