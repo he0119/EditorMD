@@ -52,7 +52,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
             array(
                 '1' => '是',
                 '0' => '否',
-            ),'1', _t('启用 Emoji 表情'), _t('启用后可在编辑器里插入 Emoji 表情符号，前台会加载13KB的js文件将表情符号转为表情图片(图片来自Staticfile CDN)'));
+            ),'1', _t('启用 Emoji 表情'), _t('启用后可在编辑器里插入 Emoji 表情符号'));
         $form->addInput($emoji);
 
         $isActive = new Typecho_Widget_Helper_Form_Element_Radio('isActive',
@@ -310,7 +310,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         <?php
     }
     /**
-     * emoji 解析器
+     * 添加必备解析器
      */
     public static function footerJS($conent)
     {
@@ -319,7 +319,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         $editormd = Typecho_Widget::widget('Widget_Options')->plugin('EditorMD');
         if($editormd->emoji){
 ?>
-<link rel="stylesheet" href="<?php echo $pluginUrl; ?>/css/emojify.min.css" />
+<link rel="stylesheet" href="<?php echo $pluginUrl; ?>/css/emoji.css" />
 <?php }if($editormd->emoji || ($editormd->isActive == 1 && $conent->isMarkdown)){ ?>
 <script type="text/javascript">
     window.jQuery || document.write(unescape('%3Cscript%20type%3D%22text/javascript%22%20src%3D%22<?php echo $pluginUrl; ?>/lib/jquery.min.js%22%3E%3C/script%3E'));
@@ -336,9 +336,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
 <script src="<?php echo $pluginUrl; ?>/lib/jquery.flowchart.min.js"></script>
 <?php } if($editormd->isSeq == 1){ ?>
 <script src="<?php echo $pluginUrl; ?>/lib/sequence-diagram.min.js"></script>
-<?php }}if($editormd->emoji){ ?>
-<script src="<?php echo $pluginUrl; ?>/js/emojify.min.js"></script>
-<?php }if($editormd->emoji||($editormd->isActive == 1 && $conent->isMarkdown)){?>
+<?php }}if($editormd->isActive == 1 && $conent->isMarkdown){?>
 <script type="text/javascript">
 $(function() {
 <?php if($editormd->isActive == 1 && $conent->isMarkdown){ ?>
@@ -366,16 +364,6 @@ $(function() {
     $(document).on('pjax:complete', function () {
         parseMarkdown()
     });
-<?php }if($editormd->emoji){ ?>
-    emojify.setConfig({
-        img_dir: "//cdn.staticfile.org/emoji-cheat-sheet/1.0.0",
-        blacklist: {
-            'ids': [],
-            'classes': ['no-emojify'],
-            'elements': ['^script$', '^textarea$', '^pre$', '^code$']
-        },
-    });
-    emojify.run();
 <?php }
 if(isset(Typecho_Widget::widget('Widget_Options')->plugins['activated']['APlayer'])){
     ?>
