@@ -321,9 +321,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
 ?>
 <link rel="stylesheet" href="<?php echo $pluginUrl; ?>/css/emoji.css" />
 <?php }if($editormd->emoji || ($editormd->isActive == 1 && $conent->isMarkdown)){ ?>
-<script type="text/javascript">
-    window.jQuery || document.write(unescape('%3Cscript%20type%3D%22text/javascript%22%20src%3D%22<?php echo $pluginUrl; ?>/lib/jquery.min.js%22%3E%3C/script%3E'));
-</script>
+<script src="<?php echo $pluginUrl; ?>/lib/jquery.min.js"></script>
 <?php }if($editormd->isActive == 1 && $conent->isMarkdown){ ?>
 <script src="<?php echo $pluginUrl; ?>/lib/marked.min.js"></script>
 <script src="<?php echo $pluginUrl; ?>/lib/highlight.pack.js"></script>
