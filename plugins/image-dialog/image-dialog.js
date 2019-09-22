@@ -41,18 +41,43 @@
                 var guid   = (new Date).getTime();
                 var action = settings.imageUploadURL + (settings.imageUploadURL.indexOf("?") >= 0 ? "&" : "?") + "guid=" + guid;
 
+                var imageUploadCallback = function (json, dialog) {
+                    if (typeof settings.imageUploadCallback === 'function') {
+                        $.proxy(settings.imageUploadCallback, _this)(json, dialog);
+                    }
+                };
+
                 if (settings.crossDomainUpload)
                 {
+                    var callbackName = settings.imageUploadCallbackName;
+
+                    window[callbackName] = imageUploadCallback;
+
+                    action += "&callback_handler=" + callbackName;
                     action += "&callback=" + settings.uploadCallbackURL + "&dialog_id=editormd-image-dialog-" + guid;
+
+                    settings.imageUploadFields += "<input type=\"hidden\" name=\"callback\" value=\"" + settings.uploadCallbackURL + "\" />";
+                    settings.imageUploadFields += "<input type=\"hidden\" name=\"callback_handler\" value=\"" + callbackName + "\" />";
+                    settings.imageUploadFields += "<input type=\"hidden\" name=\"dialog_id\" value=\"editormd-image-dialog-" + guid + "\" />";
                 }
 
-                var dialogContent = ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
+                var imageUploadAccept = [];
+
+                settings.imageFormats.forEach(function (format) {
+                    imageUploadAccept.push("image/" + format);
+                });
+
+                imageUploadAccept.join(",");
+
+                var dialogContent = ( (settings.imageUpload) ? "<form action=\"" + action + "\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
                                         ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
                                         "<label>" + imageLang.url + "</label>" +
                                         "<input type=\"text\" data-url />" + (function(){
                                             return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" +
-                                                                                "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" +
+                                                                                "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"" + imageUploadAccept + "\" />" +
                                                                                 "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" +
+                                                                                "<input type=\"hidden\" name=\"guid\" value=\"" + guid + "\" />" +
+                                                                                settings.imageUploadFields +
                                                                             "</div>" : "";
                                         })() +
                                         "<br/>" +
@@ -108,12 +133,16 @@
 
                             this.hide().lockScreen(false).hideMask();
 
+                            this.remove();
+
                             return false;
                         }],
 
                         cancel : [lang.buttons.cancel, function() {
                             this.hide().lockScreen(false).hideMask();
 
+                            this.remove();
+                            
                             return false;
                         }]
                     }
@@ -129,19 +158,19 @@
 
 				fileInput.bind("change", function() {
 					var fileName  = fileInput.val();
-					var isImage   = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
+					var isImage   = new RegExp("(\\.(" + settings.imageFormats.join("|") + "))$", "i"); // /(\.(webp|jpg|jpeg|gif|bmp|png))$/
 
 					if (fileName === "")
 					{
 						alert(imageLang.uploadFileEmpty);
-                        
+
                         return false;
 					}
-					
+
                     if (!isImage.test(fileName))
 					{
 						alert(imageLang.formatNotAllowed + settings.imageFormats.join(", "));
-                        
+
                         return false;
 					}
 
@@ -152,7 +181,7 @@
                         var uploadIframe = document.getElementById(iframeName);
 
                         uploadIframe.onload = function() {
-                            
+
                             loading(false);
 
                             var body = (uploadIframe.contentWindow ? uploadIframe.contentWindow : uploadIframe.contentDocument).document.body;
@@ -160,20 +189,27 @@
 
                             json = (typeof JSON.parse !== "undefined") ? JSON.parse(json) : eval("(" + json + ")");
 
-                            if (json.success === 1)
+                            if(!settings.crossDomainUpload)
                             {
-                                dialog.find("[data-url]").val(json.url);
-                            }
-                            else
-                            {
-                                alert(json.message);
+                                if (json.success === 1)
+                                {
+                                    dialog.find("[data-url]").val(json.url);
+                                }
+                                else
+                                {
+                                    alert(json.message);
+                                }
+
+                                if (typeof settings.imageUploadCallback === 'function') {
+                                    $.proxy(settings.imageUploadCallback, _this)(json, dialog);
+                                }
                             }
 
                             return false;
                         };
                     };
 
-                    dialog.find("[type=\"submit\"]").bind("click", submitHandler).trigger("click");
+                    dialog.find('form').on("submit", submitHandler).trigger("submit");
 				});
             }
 

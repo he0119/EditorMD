@@ -41,7 +41,7 @@
             }
             else 
             {      
-                var dialogContent = "<textarea placeholder=\"coding now....\" style=\"display:none;\">" + selection + "</textarea>";
+                var dialogContent = "<textarea placeholder=\"" + dialogLang.placeholder + "\" style=\"display:none;\">" + selection + "</textarea>";
 
                 dialog = this.createDialog({
                     name   : dialogName,
@@ -82,11 +82,13 @@
                             cm.replaceSelection(codeTexts);
 
                             this.hide().lockScreen(false).hideMask();
+                            this.remove();
 
                             return false;
                         }],
                         cancel : [lang.buttons.cancel, function() {                                  
                             this.hide().lockScreen(false).hideMask();
+                            this.remove();
 
                             return false;
                         }]
