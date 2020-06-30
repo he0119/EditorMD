@@ -1,1 +1,1 @@
-rsync -cr --progress --exclude='.git/' ./* vps:/home/he0119/nginx/typecho/usr/plugins/EditorMD/
+rsync -cr --progress --exclude='.git/' ./* hehome:/home/ubuntu/nginx/typecho/usr/plugins/EditorMD/
