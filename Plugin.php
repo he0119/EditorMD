@@ -2,7 +2,7 @@
 if (!defined('__TYPECHO_ROOT_DIR__')) exit;
 /**
  * Markdown 编辑器 <a href="https://pandao.github.io/editor.md/" target="_blank">Editor.md</a> for Typecho
- * 
+ *
  * @package EditorMD
  * @author uy_sun
  * @version 1.4.1
@@ -13,7 +13,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
     public static $count = 0;
     /**
      * 激活插件方法,如果激活失败,直接抛出异常
-     * 
+     *
      * @access public
      * @return void
      * @throws Typecho_Plugin_Exception
@@ -28,20 +28,20 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         Typecho_Plugin::factory('Widget_Archive')->footer = array('EditorMD_Plugin','footerJS');
         Typecho_Plugin::factory('Widget_Archive')->header = array('EditorMD_Plugin','headerCSS');
     }
-    
+
     /**
      * 禁用插件方法,如果禁用失败,直接抛出异常
-     * 
+     *
      * @static
      * @access public
      * @return void
      * @throws Typecho_Plugin_Exception
      */
     public static function deactivate(){}
-    
+
     /**
      * 获取插件配置面板
-     * 
+     *
      * @access public
      * @param Typecho_Widget_Helper_Form $form 配置面板
      * @return void
@@ -94,10 +94,10 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         $form->addInput($isSeq);
 
     }
-    
+
     /**
      * 个人用户的配置面板
-     * 
+     *
      * @access public
      * @param Typecho_Widget_Helper_Form $form
      * @return void
@@ -217,6 +217,9 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
                                 more: "插入摘要分隔符",
                                 isMarkdown: "非Markdown模式"
                             }
+                        },
+                        onchange: function() {
+                          $('#text').trigger("input");
                         },
                     });
 
