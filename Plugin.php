@@ -24,7 +24,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
         Typecho_Plugin::factory('admin/write-page.php')->richEditor = array('EditorMD_Plugin', 'Editor');
 
         Typecho_Plugin::factory('Widget_Abstract_Contents')->content = array('EditorMD_Plugin', 'content');
-        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerpt = array('EditorMD_Plugin', 'content');
+        Typecho_Plugin::factory('Widget_Abstract_Contents')->excerpt = array('EditorMD_Plugin', 'excerpt');
         Typecho_Plugin::factory('Widget_Archive')->footer = array('EditorMD_Plugin','footerJS');
         Typecho_Plugin::factory('Widget_Archive')->header = array('EditorMD_Plugin','headerCSS');
     }
@@ -401,5 +401,11 @@ if(isset(Typecho_Widget::widget('Widget_Options')->plugins['activated']['APlayer
             return '<div id="md_content_'.self::$count.'" class="md_content" style="min-height: 50px;"><textarea id="append-test" style="display:none;">'.$text.'</textarea></div>';
         else
             return $text;
+    }
+    public static function excerpt($text, $conent){
+        self::$count++;
+        $text = $conent->isMarkdown ? $conent->markdown($text)
+            : $conent->autoP($text);
+        return $text;
     }
 }
