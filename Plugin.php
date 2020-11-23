@@ -389,8 +389,13 @@ if(isset(Typecho_Widget::widget('Widget_Options')->plugins['activated']['APlayer
 }
     }
     public static function headerCSS($header) {
-        echo '<link rel="stylesheet" href="//cdn.staticfile.org/highlight.js/9.15.10/styles/googlecode.min.css">';
-    }
+        $options = Helper::options();
+        $cssUrl = $options->pluginUrl.'/EditorMD/css/googlecode.css';
+        ?>
+
+    <link rel="stylesheet" href="<?php echo $cssUrl; ?>">
+<?php
+}
 
     public static function content($text, $conent){
         self::$count++;
