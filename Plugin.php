@@ -110,13 +110,13 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
     public static function Editor()
     {
         $options = Helper::options();
-        $cssUrl = $options->pluginUrl.'/EditorMD/css/editormd.min.css';
-        $jsUrl = $options->pluginUrl.'/EditorMD/js/editormd.min.js';
+        $cssUrl = 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome/css/editormd.min.css';
+        $jsUrl = 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome/js/editormd.min.js';
         $editormd = Typecho_Widget::widget('Widget_Options')->plugin('EditorMD');
         ?>
         <link rel="stylesheet" href="<?php echo $cssUrl; ?>" />
         <script>
-            var emojiPath = '<?php echo $options->pluginUrl; ?>';
+            var emojiPath = 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome';
             var uploadURL = '<?php Helper::security()->index('/action/upload?cid=CID'); ?>';
         </script>
         <script type="text/javascript" src="<?php echo $jsUrl; ?>"></script>
@@ -144,7 +144,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
                     postEditormd = editormd("text-editormd", {
                         width: "100%",
                         height: 640,
-                        path: '<?php echo $options->pluginUrl ?>/EditorMD/lib/',
+                        path: 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome/lib/',
                         toolbarAutoFixed: false,
                         htmlDecode: true,
                         emoji: <?php echo $editormd->emoji ? 'true' : 'false'; ?>,
@@ -318,7 +318,7 @@ class EditorMD_Plugin implements Typecho_Plugin_Interface
     public static function footerJS($conent)
     {
         $options = Helper::options();
-        $pluginUrl = $options->pluginUrl.'/EditorMD';
+        $pluginUrl = 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome';
         $editormd = Typecho_Widget::widget('Widget_Options')->plugin('EditorMD');
         if($editormd->emoji){
 ?>
@@ -390,7 +390,7 @@ if(isset(Typecho_Widget::widget('Widget_Options')->plugins['activated']['APlayer
     }
     public static function headerCSS($header) {
         $options = Helper::options();
-        $cssUrl = $options->pluginUrl.'/EditorMD/css/googlecode.css';
+        $cssUrl = 'https://cdn.jsdelivr.net/gh/he0119/typecho-editormd@hehome/css/googlecode.css';
         ?>
 
     <link rel="stylesheet" href="<?php echo $cssUrl; ?>">

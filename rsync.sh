@@ -1,1 +1,1 @@
-rsync -cr --progress --exclude='.git/' ./* /dest/
+rsync -cr --progress --exclude='.git/' ./* hehome:/home/ubuntu/websites/blog/typecho/usr/plugins/EditorMD
